@@ -222,15 +222,18 @@ a:hover {
   border-radius: 50%;
 }
 
-.avatar .nickname,
-.avatar .nickname a#matrix-nickname {
+.avatar .nickname {
   font-size: 2rem;
   font-weight: 600;
-  color: #FFFFFF;
   padding-top: 10px;
 }
 
-.avatar .nickname a#matrix-nickname:hover,
+.avatar .nickname,
+.avatar .nickname a {
+  color: #FFFFFF;
+}
+
+.avatar .nickname a:hover,
 .navbar ul li a.matrix-nav:hover {
   color: #FF2A2A;
 }
