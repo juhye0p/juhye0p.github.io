@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <author>
+    <name>juhye0p</name>
+  </author>
+  <generator uri="https://hexo.io/">Hexo</generator>
+  <id>https://juhye0p.github.io/</id>
+  <link href="https://juhye0p.github.io/" rel="alternate"/>
+  <link href="https://juhye0p.github.io/atom.xml" rel="self"/>
+  <rights>All rights reserved 2026, juhye0p</rights>
+  <title>juhye0p</title>
+  <updated>2026-03-15T16:05:42.740Z</updated>
+  <entry>
+    <author>
+      <name>juhye0p</name>
+    </author>
+    <content>
+      <![CDATA[<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-number">00414</span><span class="hljs-function">aa8    <span class="hljs-type">int32_t</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-type">int32_t</span> argc, <span class="hljs-type">char</span>** argv, <span class="hljs-type">char</span>** envp)</span></span><br><span class="hljs-function"></span><br><span class="hljs-function">00414ac8        <span class="hljs-title">printf</span><span class="hljs-params">(<span class="hljs-number">0x6116c0</span>)</span>  </span>&#123;<span class="hljs-string">&quot;Hello World&quot;</span>&#125;<br></code></pre></td></tr></table></figure>]]>
+    </content>
+    <id>https://juhye0p.github.io/2026/03/03/test/</id>
+    <link href="https://juhye0p.github.io/2026/03/03/test/"/>
+    <published>2026-03-02T23:37:44.630Z</published>
+    <summary>
+      <![CDATA[<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span]]>
+    </summary>
+    <title>test</title>
+    <updated>2026-03-15T16:05:42.740Z</updated>
+  </entry>
+</feed>

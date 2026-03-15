@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search> 
+  
+  
+    
+    <entry>
+      <title>test</title>
+      <link href="/2026/03/03/test/"/>
+      <url>/2026/03/03/test/</url>
+      
+        <content type="html"><![CDATA[<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-number">00414</span><span class="hljs-function">aa8    <span class="hljs-type">int32_t</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-type">int32_t</span> argc, <span class="hljs-type">char</span>** argv, <span class="hljs-type">char</span>** envp)</span></span><br><span class="hljs-function"></span><br><span class="hljs-function">00414ac8        <span class="hljs-title">printf</span><span class="hljs-params">(<span class="hljs-number">0x6116c0</span>)</span>  </span>&#123;<span class="hljs-string">&quot;Hello World&quot;</span>&#125;<br></code></pre></td></tr></table></figure>]]></content>
+      
+      
+      
+    </entry>
+    
+    
+  
+  
+</search>
