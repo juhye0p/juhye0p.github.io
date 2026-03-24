@@ -1,0 +1,336 @@
+/* =============================================
+   One Dark Pro — custom highlight.js theme
+   Based on VS Code One Dark Pro extension colors
+   ============================================= */
+
+/* --- Layout --- */
+
+.article-entry pre,
+.article-entry .highlight {
+  background: #282c34;
+  margin: 0 -20px;
+  padding: 15px 20px;
+  border-style: solid;
+  border-color: color-border;
+  border-width: 1px 0;
+  overflow: auto;
+  color: #abb2bf;
+  line-height: 22.4px
+}
+
+.article-entry .highlight .gutter pre,
+.article-entry .gist .gist-file .gist-data .line-numbers {
+  color: #495162;
+  font-size: .85em
+}
+
+.article-entry pre,
+.article-entry code {
+  font-family: "Source Code Pro", Consolas, Monaco, Menlo, monospace
+}
+
+.article-entry code {
+  background: color-background;
+  text-shadow: 0 1px #fff;
+  padding: 0 .3em
+}
+
+.article-entry pre code {
+  background: none;
+  text-shadow: none;
+  padding: 0
+}
+
+.article-entry .highlight pre {
+  border: none;
+  margin: 0;
+  padding: 0
+}
+
+.article-entry .highlight table {
+  margin: 0;
+  width: auto
+}
+
+.article-entry .highlight td {
+  border: none;
+  padding: 0
+}
+
+.article-entry .highlight figcaption {
+  font-size: .85em;
+  color: #999;
+  line-height: 1em;
+  margin-bottom: 1em;
+}
+
+.article-entry .highlight figcaption a {
+  float: right
+}
+
+.article-entry .highlight .gutter pre {
+  text-align: right;
+  padding-right: 20px
+}
+
+.article-entry .highlight .line {
+  height: 22.4px
+}
+
+.article-entry .highlight .line.marked {
+  background: #3e4451
+}
+
+.article-entry .gist {
+  margin: 0 -20px;
+  border-style: solid;
+  border-color: color-border;
+  border-width: 1px 0;
+  background: #282c34;
+  padding: 15px 20px 15px 0;
+}
+
+.article-entry .gist .gist-file {
+  border: none;
+  font-family: "Source Code Pro", Consolas, Monaco, Menlo, monospace;
+  margin: 0;
+}
+
+.article-entry .gist .gist-file .gist-data {
+  background: none;
+  border: none;
+}
+
+.article-entry .gist .gist-file .gist-data .line-numbers {
+  background: none;
+  border: none;
+  padding: 0 20px 0 0
+}
+
+.article-entry .gist .gist-file .gist-data .line-data {
+  padding: 0 !important
+}
+
+.article-entry .gist .gist-file .highlight {
+  margin: 0;
+  padding: 0;
+  border: none
+}
+
+.article-entry .gist .gist-file .gist-meta {
+  background: #282c34;
+  color: #999;
+  font: .85em -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+  text-shadow: 0 0;
+  padding: 0;
+  margin-top: 1em;
+  margin-left: 20px;
+}
+
+.article-entry .gist .gist-file .gist-meta a {
+  color: #258fb8;
+  font-weight: normal;
+}
+
+.article-entry .gist .gist-file .gist-meta a:hover {
+  text-decoration: underline
+}
+
+.markdown-body .highlight {
+  color: #abb2bf;
+  background-color: #282c34;
+  border-radius: 5px;
+}
+
+.markdown-body .highlight table td {
+  padding: 0;
+  border: none;
+}
+
+.markdown-body .highlight table tr {
+  border: none;
+}
+
+.markdown-body .highlight .gutter pre {
+  color: #495162;
+  background: #21252b;
+}
+
+.highlight .code pre {
+  width: 100%;
+  padding-left: 10px;
+  padding-right: 10px;
+  background-color: #282c34 !important;
+}
+
+.markdown-body .highlight table tbody pre {
+  border-radius: 0;
+}
+
+details summary {
+  outline: none;
+  cursor: pointer;
+}
+
+figure {
+  position: relative;
+}
+
+figure figcaption {
+  padding-left: 1rem;
+  background-color: #21252b;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+}
+
+figure table .gutter {
+  user-select: none;
+}
+
+figure .pin-copy {
+  position: absolute;
+  top: 0;
+  right: 1rem;
+  cursor: pointer;
+}
+
+/* --- One Dark Pro syntax colors (hljs classes) --- */
+
+.hljs {
+  color: #abb2bf;
+  background: #282c34;
+}
+
+/* comments */
+.hljs-comment,
+.hljs-quote {
+  color: #7f848e;
+  font-style: italic;
+}
+
+/* keywords: if, else, return, for, while, switch, case, break, continue, etc. */
+.hljs-keyword,
+.hljs-selector-tag {
+  color: #c678dd;
+}
+
+/* types: int, char, void, float, double, unsigned, signed, struct, enum, etc. */
+.hljs-type,
+.hljs-built_in {
+  color: #e5c07b;
+}
+
+/* strings */
+.hljs-string,
+.hljs-selector-attr,
+.hljs-selector-pseudo {
+  color: #98c379;
+}
+
+/* numbers */
+.hljs-number,
+.hljs-literal {
+  color: #d19a66;
+}
+
+/* functions */
+.hljs-title,
+.hljs-title.function_ {
+  color: #61afef;
+}
+
+/* variables, parameters */
+.hljs-variable,
+.hljs-params {
+  color: #e06c75;
+}
+
+/* preprocessor: #include, #define, #ifdef, etc. */
+.hljs-meta,
+.hljs-meta .hljs-keyword {
+  color: #e06c75;
+}
+
+.hljs-meta .hljs-string {
+  color: #98c379;
+}
+
+/* operators, punctuation */
+.hljs-operator {
+  color: #56b6c2;
+}
+
+/* class/struct names */
+.hljs-title.class_ {
+  color: #e5c07b;
+}
+
+/* attributes */
+.hljs-attr,
+.hljs-attribute {
+  color: #d19a66;
+}
+
+/* symbols, bullets */
+.hljs-symbol,
+.hljs-bullet {
+  color: #61afef;
+}
+
+/* regex */
+.hljs-regexp {
+  color: #98c379;
+}
+
+/* template variables */
+.hljs-template-variable {
+  color: #e06c75;
+}
+
+/* additions (diff) */
+.hljs-addition {
+  color: #98c379;
+  background-color: rgba(152, 195, 121, 0.1);
+}
+
+/* deletions (diff) */
+.hljs-deletion {
+  color: #e06c75;
+  background-color: rgba(224, 108, 117, 0.1);
+}
+
+/* links */
+.hljs-link {
+  color: #61afef;
+  text-decoration: underline;
+}
+
+/* section headers (markdown) */
+.hljs-section {
+  color: #e06c75;
+}
+
+/* emphasis */
+.hljs-emphasis {
+  font-style: italic;
+}
+
+/* strong */
+.hljs-strong {
+  font-weight: bold;
+}
+
+/* selector (CSS) */
+.hljs-selector-id,
+.hljs-selector-class {
+  color: #e06c75;
+}
+
+/* tags (HTML/XML) */
+.hljs-tag {
+  color: #abb2bf;
+}
+
+.hljs-name {
+  color: #e06c75;
+}
