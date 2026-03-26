@@ -5,16 +5,9 @@ var html = document.documentElement
 
 const switchMode = () => {
     let attr = html.getAttribute('color-mode')
-    let colorMode = 'light'
-    if (attr === 'light') {
-        html.setAttribute('color-mode', 'dark')
-        themeIcon.classList = 'iconfont icon-sun'
-        colorMode = 'dark'
-    } else {
-        html.setAttribute('color-mode', 'light')
-        themeIcon.classList = 'iconfont icon-moon'
-        colorMode = 'light'
-    }
+    let colorMode = attr === 'light' ? 'dark' : 'light'
+    html.setAttribute('color-mode', colorMode)
+    themeIcon.classList = colorMode === 'dark' ? 'iconfont icon-sun' : 'iconfont icon-moon'
     localStorage.setItem('color-mode', colorMode)
 }
 

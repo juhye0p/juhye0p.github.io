@@ -222,12 +222,18 @@ a:hover {
   border-radius: 50%;
 }
 
-.avatar .nickname,
-.avatar .nickname a {
+.avatar .nickname {
   font-size: 2rem;
   font-weight: 600;
-  color: #FFFFFF;
   padding-top: 10px;
+}
+
+.avatar .nickname a {
+  color: #FFFFFF;
+}
+
+:root[color-mode="light"] .avatar .nickname a {
+  color: #14191e;
 }
 
 .navbar ul li a {
@@ -236,7 +242,12 @@ a:hover {
 
 .navbar ul li a:hover,
 .navbar ul li.active a {
-  color: #ffffff;
+  color: #FFFFFF;
+}
+
+:root[color-mode="light"] .navbar ul li a:hover,
+:root[color-mode="light"] .navbar ul li.active a {
+  color: #14191e;
 }
 
 .content {
