@@ -1324,6 +1324,11 @@ a:hover {
 
 .avatar .nickname a {
   color: #FFFFFF;
+  transition: color 0.4s ease;
+}
+
+.avatar .nickname a:hover {
+  color: #ff0000;
 }
 
 :root[color-mode="light"] .avatar .nickname a {
