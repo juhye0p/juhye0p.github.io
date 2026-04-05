@@ -1328,10 +1328,14 @@ a:hover {
 }
 
 .avatar .nickname a:hover {
-  color: #ff0000;
+  color: #FFFFFF;
 }
 
 :root[color-mode="light"] .avatar .nickname a {
+  color: #14191e;
+}
+
+:root[color-mode="light"] .avatar .nickname a:hover {
   color: #14191e;
 }
 
