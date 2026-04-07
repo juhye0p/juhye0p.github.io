@@ -13,7 +13,7 @@
   
   <title>
     
-      Tearing Down eCos RTOS Embedded System 
+      Tearing Down eCos RTOS Embedded System [KR] 
       
       
       |
@@ -151,44 +151,33 @@
   <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
   <div class="container post-details" id="post-details">
     <div class="post-content">
-      <div class="post-title">Tearing Down eCos RTOS Embedded System</div>
+      <div class="post-title">Tearing Down eCos RTOS Embedded System [KR]</div>
       <div class="post-attach">
         <span class="post-pubtime">
           <i class="iconfont icon-updatetime mr-10" title="Update time"></i>
-          2026-04-08 06:28:54
+          2026-04-08 06:29:04
         </span>
         
-              <span class="post-tags">
-                <i class="iconfont icon-tags mr-10" title="Tags"></i>
-                
-                <span class="span--tag mr-8">
-                  <a href="/tags/IoT/" title="IoT">
-                    #IoT
-                  </a>
-                </span>
-                
-              </span>
-          
       </div>
       <div class="markdown-body">
         <h1 id="TL-DR"><a href="#TL-DR" class="headerlink" title="TL;DR"></a>TL;DR</h1><hr>
-<p>Tearing down an eCos-based embedded system from flash dump to boot sequence.</p>
+<p>eCos 기반 임베디드 시스템을 플래시 덤프부터 부팅 시퀀스까지의 분석 과정을 설명합니다.</p>
 <h1 id="Flash-Dump"><a href="#Flash-Dump" class="headerlink" title="Flash Dump"></a>Flash Dump</h1><hr>
-<p><img src="/2026/03/30/Tearing-Down-eCos-RTOS-Embedded-System/PCB.jpeg" alt="PCB"><br>The eCos-based router target had a SoC (System-on-Chip), SPI SOP-8 NOR flash chip, UART (Universal Asynchronous Receiver-Transmitter) interface and Wireless LAN chip. For dumping the flash memory I just decided to chip off the NOR flash.</p>
+<p><img src="/2026/03/30/Tearing-Down-eCos-RTOS-Embedded-System/PCB.jpeg" alt="PCB"><br>eCos 기반 라우터 타겟에는 SoC (System-on-Chip), SPI SOP-8 NOR 플래시 칩, UART (Universal Asynchronous Receiver-Transmitter) 인터페이스 및 무선 LAN 칩이 탑재되어 있었습니다. 플래시 메모리 덤프를 위해 NOR 플래시 칩을 칩오프하기로 했습니다.</p>
 <p><img src="/2026/03/30/Tearing-Down-eCos-RTOS-Embedded-System/FlashROM.jpeg" alt="FlashROM"><br><img src="/2026/03/30/Tearing-Down-eCos-RTOS-Embedded-System/FlashROM-off.jpeg" alt="FlashROM-off"></p>
-<p>The NOR flash was a <a target="_blank" rel="noopener" href="https://www.e-interlink.com.tw/userUpload/files/BH25D16A_v1_0.pdf">BoHong BH25D16A</a> chip and the pin map was as shown below:</p>
+<p>NOR 플래시는 <a target="_blank" rel="noopener" href="https://www.e-interlink.com.tw/userUpload/files/BH25D16A_v1_0.pdf">BoHong BH25D16A</a> 칩이었으며 핀 구성도는 아래와 같습니다:</p>
 <p><img src="/2026/03/30/Tearing-Down-eCos-RTOS-Embedded-System/FlashROM-pinmap.png" alt="FlashROM-pinmap"></p>
 <ul>
-<li>1: &#x2F;CS (Chip Select)</li>
-<li>2: DO (Serial Data Output)</li>
-<li>3: &#x2F;WP (Write protect when driven LOW)</li>
-<li>4: VSS (Ground)</li>
-<li>5: DI (Serial Data Input)</li>
-<li>6: SCK (Serial Clock)</li>
-<li>7: NC (Not Connection)</li>
-<li>8: VCC (Supply Voltage)</li>
+<li>1: &#x2F;CS (칩 선택)</li>
+<li>2: DO (직렬 데이터 출력)</li>
+<li>3: &#x2F;WP (LOW로 설정 시 쓰기 방지)</li>
+<li>4: VSS (접지)</li>
+<li>5: DI (직렬 데이터 입력)</li>
+<li>6: SCK (직렬 클록)</li>
+<li>7: NC (연결 안 됨)</li>
+<li>8: VCC (공급 전압)</li>
 </ul>
-<p>The BH25D16A was designed for environments where it has dedicated (non-shared) access to the SPI bus, so there is no &#x2F;HOLD pin for sharing the bus to other devices. And because I only read the flash memory, I left the &#x2F;WP pin floating (not needed for read-only operations).</p>
+<p>BH25D16A는 SPI 버스의 전용 (공유되지 않는) 접근이 필요한 환경을 위해 설계되었으므로 다른 장치와 버스를 공유하기 위한 &#x2F;HOLD 핀이 없습니다. 또한 플래시 메모리 읽기만 수행하기 때문에 &#x2F;WP 핀은 연결하지 않았습니다 (읽기 전용 작업에는 필요하지 않음).</p>
 <h2 id="SPI"><a href="#SPI" class="headerlink" title="SPI"></a>SPI</h2><hr>
 <pre><code class="hljs plaintext">┌──────────┐                     ┌──────────┐
 │          │──── MOSI (SDI) ────&gt;│          │
@@ -196,7 +185,7 @@
 │  Master  │──── SCLK (CLK) ────&gt;│  Slave   │
 │          │──── CS/SS (LOW) ───&gt;│          │
 └──────────┘                     └──────────┘</code></pre>
-<p>SPI (Serial Peripheral Interface) is a synchronous serial communication protocol in which one master communicates with one or more slave devices in full-duplex. In case of memory dump, the master is the SPI programmer and the slave is the memory chip.</p>
+<p>SPI (Serial Peripheral Interface)는 하나의 마스터가 하나 이상의 슬레이브 장치와 전이중 방식으로 통신할 시 사용하는 동기식 직렬 통신 프로토콜입니다. 메모리 덤프의 경우, 마스터는 SPI 프로그래머이고 슬레이브는 메모리 칩이 됩니다.</p>
 <table>
 <thead>
 <tr>
@@ -207,56 +196,56 @@
 </thead>
 <tbody><tr>
 <td align="center">MOSI(Master Out Slave In)</td>
-<td align="center">Master → Slave</td>
-<td align="center">Master’s data send line</td>
+<td align="center">마스터 → 슬레이브</td>
+<td align="center">마스터의 데이터 송신 선</td>
 </tr>
 <tr>
 <td align="center">MISO(Master In Slave Out)</td>
-<td align="center">Slave → Master</td>
-<td align="center">Slave’s data send line</td>
+<td align="center">슬레이브 → 마스터</td>
+<td align="center">슬레이브의 데이터 송신 선</td>
 </tr>
 <tr>
 <td align="center">SCLK(Serial Clock)</td>
-<td align="center">Master → Slave</td>
-<td align="center">Master’s clock signal</td>
+<td align="center">마스터 → 슬레이브</td>
+<td align="center">마스터의 클럭 신호 선</td>
 </tr>
 <tr>
 <td align="center">CS&#x2F;SS(Chip Select &#x2F; Slave Select)</td>
-<td align="center">Master → Slave</td>
-<td align="center">Selects slave with driven LOW</td>
+<td align="center">마스터 → 슬레이브</td>
+<td align="center">LOW로 설정 시 슬레이브 선택</td>
 </tr>
 </tbody></table>
 <h2 id="Clock-Signal"><a href="#Clock-Signal" class="headerlink" title="Clock Signal"></a>Clock Signal</h2><hr>
 <pre><code class="hljs plaintext">SCLK  __/‾\_/‾\_/‾\_/‾\__
 MOSI  -[1]-[0]-[1]-[1]---
         ↑   ↑   ↑   ↑
-      Send 1 bit per clock edge</code></pre>
-<p>The clock signal acts like a timing signal that tells devices when to read or write data, ensuring that multiple devices remain synchronized during communication. The master defines the clock, and the slave samples data on the clock edge (the rising edge of SPI mode 0&#x2F;3).</p>
+      클럭 엣지마다 1비트씩 전송함</code></pre>
+<p>클록 신호는 장치들에게 언제 데이터를 읽거나 써야 하는지를 알려주는 타이밍 신호 역할을 수행하여 여러 장치가 통신하는 동안 동기화 상태를 유지하도록 합니다. 마스터는 클럭을 정의하고, 슬레이브는 클럭 엣지 (SPI 모드 0&#x2F;3의 상승 엣지) 에서 데이터를 샘플링합니다.</p>
 <h2 id="SPI-Communication-Diagram"><a href="#SPI-Communication-Diagram" class="headerlink" title="SPI Communication Diagram"></a>SPI Communication Diagram</h2><hr>
 <pre><code class="hljs plaintext">CS   ‾‾‾‾\___________________________________/‾‾‾‾
-        ↑ CS LOW (communication start)       ↑ CS HIGH (communication stop)
+        ↑ CS LOW (통신 시작)                   ↑ CS HIGH (통신 종료)
 
 SCLK _______/‾\_/‾\_/‾\_/‾\_/‾\_/‾\_/‾\_/‾\_______
             1   2   3   4   5   6   7   8
-            ↑ Send 1 bit per clock edge
+            ↑ 클럭 엣지마다 1비트씩 전송함
 
-MOSI ────[MSB]──────────────────────────[LSB]─────  (Master → Slave)
-MISO ────[MSB]──────────────────────────[LSB]─────  (Slave → Master)
-         ↑ Full-Duplex</code></pre>
+MOSI ────[MSB]──────────────────────────[LSB]─────  (마스터 → 슬레이브)
+MISO ────[MSB]──────────────────────────[LSB]─────  (슬레이브 → 마스터)
+         ↑ 전이중</code></pre>
 
-<p>The BH25D16A’s maximum clock frequency is 55 MHz for normal read and 108 MHz for fast&#x2F;dual read. I used a CH341A programmer to communicate with the NOR flash via SPI. Because the <a target="_blank" rel="noopener" href="https://flashrom.org/">flashrom</a>‘s spispeed was fixed at 2 MHz, which is within the maximum clock frequency range of the NOR flash, I was able to read the flash memory without speed adjustment.</p>
-<p><img src="/2026/03/30/Tearing-Down-eCos-RTOS-Embedded-System/FlashROM-dump.jpeg" alt="FlashROM-dump"><br><img src="/2026/03/30/Tearing-Down-eCos-RTOS-Embedded-System/flashrom.png" alt="flashrom"><br>To verify the stability of the firmware that I read, I extracted it twice and compared the MD5 hash of each binary.</p>
+<p>BH25D16A의 최대 클럭 주파수는 일반 읽기 시 55MHz, 고속&#x2F;듀얼 읽기 시 108MHz입니다. 저는 CH341A 프로그래머를 사용하여 NOR 플래시와 SPI 통신했습니다. <a target="_blank" rel="noopener" href="https://flashrom.org/">flashrom</a>의 spispeed는 2MHz로 고정이며, 이는 NOR 플래시의 최대 클럭 주파수 범위 내에 있으므로 별도의 속도 조정 없이 플래시 메모리를 읽을 수 있었습니다.</p>
+<p><img src="/2026/03/30/Tearing-Down-eCos-RTOS-Embedded-System/FlashROM-dump.jpeg" alt="FlashROM-dump"><br><img src="/2026/03/30/Tearing-Down-eCos-RTOS-Embedded-System/flashrom.png" alt="flashrom"><br>읽어온 펌웨어의 안정성을 확인하기 위해 총 두 번 바이너리를 추출한 후 각 바이너리의 MD5 해시값을 비교했습니다.</p>
 <p><img src="/2026/03/30/Tearing-Down-eCos-RTOS-Embedded-System/md5sum.png" alt="md5sum"><br><img src="/2026/03/30/Tearing-Down-eCos-RTOS-Embedded-System/binwalk-firmware.png" alt="binwalk firmware"></p>
-<p>The binary MD5 hash was identical. The firmware contains gzip compressed data and LZMA compressed resources. The LZMA compressed resources will be decompressed to RAM at the boot sequence. Before performing static analysis, I needed to identify the SoC’s memory map in order to create a segment mapped to the correct memory address. </p>
-<p>Thus, I removed the EMI (Electromagnetic Interference) shield to check the SoC model. It belongs to the RTL8197F family, which is based on the MIPS architecture.</p>
+<p>바이너리의 MD5 해시는 모두 동일했습니다. 펌웨어에는 gzip으로 압축된 데이터와 LZMA로 압축된 리소스가 포함되어 있습니다. LZMA로 압축된 리소스는 부팅 시퀀스에서 RAM으로 압축 해제됩니다. 펌웨어 정적 분석을 수행하기 전에 올바른 메모리 주소에 매핑된 세그먼트를 생성하기 위해서 SoC의 메모리 맵을 식별해야 합니다.</p>
+<p>그래서 EMI (Electromagnetic Interference) 차폐막을 제거하고 SoC 모델을 확인했습니다. 해당 SoC는 MIPS 아키텍처 기반의 RTL8197F 제품군에 속합니다.</p>
 <p><img src="/2026/03/30/Tearing-Down-eCos-RTOS-Embedded-System/EMI-Shield-open.jpeg" alt="EMI-Shield open"></p>
 <p><img src="/2026/03/30/Tearing-Down-eCos-RTOS-Embedded-System/SoC.jpeg" alt="SoC"></p>
 <h1 id="Boot-Sequence-Overview"><a href="#Boot-Sequence-Overview" class="headerlink" title="Boot Sequence Overview"></a>Boot Sequence Overview</h1><hr>
-<p><img src="/2026/03/30/Tearing-Down-eCos-RTOS-Embedded-System/boot-sequence-diagram.drawio.svg" alt="boot-sequence-diagram"></p>
+<p><img src="/2026/04/07/Tearing-Down-eCos-RTOS-Embedded-System-KR/boot-sequence-diagram-kr.drawio.svg" alt="boot-sequence-diagram"></p>
 <h1 id="Boot-Stage-1"><a href="#Boot-Stage-1" class="headerlink" title="Boot Stage 1"></a>Boot Stage 1</h1><hr>
-<p><img src="/2026/03/30/Tearing-Down-eCos-RTOS-Embedded-System/ROM-memorymap.png" alt="ROM memory map"><br>According to the <a target="_blank" rel="noopener" href="https://datasheet.lcsc.com/datasheet/pdf/4a3f00e35d1237aed4f7175f86001796.pdf">RTL8197F datasheet</a>, the Stage 1 Boot ROM code executes at virtual address 0xB0000000 using <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Execute_in_place">XIP</a> (eXecute In Place) technology.</p>
+<p><img src="/2026/03/30/Tearing-Down-eCos-RTOS-Embedded-System/ROM-memorymap.png" alt="ROM memory map"><br><a target="_blank" rel="noopener" href="https://datasheet.lcsc.com/datasheet/pdf/4a3f00e35d1237aed4f7175f86001796.pdf">RTL8197F 데이터시트</a>에 따르면, Stage 1 Boot ROM 코드는 <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Execute_in_place">XIP</a>(eXecute In Place) 기술을 사용하여 가상 주소 0xB0000000에서 실행됩니다.</p>
 <p><img src="/2026/03/30/Tearing-Down-eCos-RTOS-Embedded-System/Stage1-BL-vector-table.png" alt="Stage 1 BL vector table"><br><img src="/2026/03/30/Tearing-Down-eCos-RTOS-Embedded-System/Stage1-BL-reset_entry.png" alt="Stage 1 BL reset_entry"></p>
-<p>The Stage 1 Boot ROM code prints boot logs, invalidates the D-cache (Data cache) and I-cache (Instruction cache), loads the Stage 1.5 Bootloader (0xB0007000) to DRAM (0x80100000), and jumps to it.<br>So I created a new DRAM segment like below:</p>
+<p>Stage 1 Boot ROM 코드는 부팅 로그를 출력하고, D-Cache (데이터 캐시) 와 I-Cache (명령어 캐시) 를 무효화하고, Stage 1.5 부트로더 (0xB0007000) 를 DRAM (0x80100000) 에 로드한 후 해당 위치로 점프합니다.<br>그래서 다음과 같이 새로운 DRAM 세그먼트를 생성했습니다:</p>
 <p><img src="/2026/03/30/Tearing-Down-eCos-RTOS-Embedded-System/Stage1.5-BL-segment.png" alt="Stage 1.5 BL segment"></p>
 <h1 id="Boot-Stage-1-5"><a href="#Boot-Stage-1-5" class="headerlink" title="Boot Stage 1.5"></a>Boot Stage 1.5</h1><hr>
 <pre><code class="hljs c">DRAM:<span class="hljs-number">80100000</span>     <span class="hljs-meta"># int dram_entry()</span>
@@ -290,7 +279,7 @@ DRAM:<span class="hljs-number">8010002</span>C     # End of function dram_entry
   post_decompress_init();                       <span class="hljs-comment">// D-cache writeback + I-cache invalidate — synchronize released code cache</span>
   <span class="hljs-keyword">return</span> MEMORY[<span class="hljs-number">0x80000000</span>](v0, v1, v2, v3);    <span class="hljs-comment">// jalr 0x80000000 -&gt; Stage 2 Bootloader(&quot;RTL8197F-VG boot version:614&quot;)</span>
 &#125;</code></pre>
-<p>The Stage 1.5 Bootloader decompresses the gzip compressed Stage 2 Bootloader (0x80101D60) to KSEG0 (0x80000000), synchronizes the instruction and data caches (D-cache writeback + I-cache invalidate), and executes it.</p>
+<p>Stage 1.5 부트로더는 gzip으로 압축된 Stage 2 부트로더 (0x80101D60) 를 KSEG0 (0x80000000) 으로 압축 해제하고, 명령어 캐시와 데이터 캐시를 동기화 (D-Cache 쓰기 + I-Cache 무효화) 한 후 실행합니다. </p>
 <h1 id="Boot-Stage-2"><a href="#Boot-Stage-2" class="headerlink" title="Boot Stage 2"></a>Boot Stage 2</h1><hr>
 <pre><code class="hljs c">DRAM:<span class="hljs-number">80000000</span>     # Segment type: Pure code
 DRAM:<span class="hljs-number">80000000</span>                    .text # DRAM     <span class="hljs-comment">// vector table</span>
@@ -448,14 +437,14 @@ DRAM:<span class="hljs-number">8000047</span>C                    nop
   sub_8000D3D4(<span class="hljs-string">&quot;No sys signature at %X!\n&quot;</span>, a1 + <span class="hljs-number">1342177280</span>);
   <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
 &#125;</code></pre>
-<p>The <code>check_firmware_integrity</code> function checks the firmware magic bytes against “cs6c” and “cr6c”, which are magic bytes used in RealTek firmware.</p>
+<p><code>check_firmware_integrity</code> 함수는 RealTek 펌웨어의 매직 바이트인 “cs6c”와 “cr6c”를 기준으로 펌웨어의 매직 바이트 무결성을 검사합니다.</p>
 <ul>
-<li>cs6c: LZMA compressed firmware image</li>
-<li>cr6c: root filesystem image</li>
+<li>cs6c: LZMA로 압축된 펌웨어 이미지</li>
+<li>cr6c: 루트 파일 시스템 이미지</li>
 </ul>
-<p>In this case, the firmware contains the “cs6c” magic bytes, indicating an LZMA-compressed image rather than a root filesystem. </p>
+<p>이 경우 펌웨어에는 “cs6c” 매직 바이트가 포함되어 있는데, 이는 루트 파일 시스템이 아닌 LZMA로 압축된 이미지임을 나타냅니다.</p>
 <p><img src="/2026/03/30/Tearing-Down-eCos-RTOS-Embedded-System/xxd-firmware-magic-bytes.png" alt="xxd firmware magic bytes"></p>
-<p>Additionally, it verifies the rootfs checksum value, if the magic bytes were “cr6c”.</p>
+<p>또한, 매직 바이트가 “cr6c”인지 여부에 따라 루트 파일 시스템 체크섬 값을 검증합니다.</p>
 <pre><code class="hljs c"><span class="hljs-type">int</span> __fastcall <span class="hljs-title function_">load_firmware_n_jump</span><span class="hljs-params">(<span class="hljs-type">int</span> a1, _DWORD *a2)</span>
 &#123;
   <span class="hljs-type">unsigned</span> <span class="hljs-type">int</span> v5; <span class="hljs-comment">// $a0</span>
@@ -494,7 +483,7 @@ Mac addr:...
 port link ...
 Jump to image start:0x80700000...</code></pre>
 
-<p>After integrity verfication completes, it loads the Kernel Decompressor to KSEG0 (0x80700000) and executes it.</p>
+<p>무결성 검증이 완료되면, Kernel Decompressor를 KSEG0 (0x80700000) 에 로드하고 실행합니다.</p>
 <h1 id="Kernel-Decompressor"><a href="#Kernel-Decompressor" class="headerlink" title="Kernel Decompressor"></a>Kernel Decompressor</h1><hr>
 <pre><code class="hljs c"><span class="hljs-comment">// Analyzed by Claude Code Opus 4.6</span>
 
@@ -615,19 +604,19 @@ decompress_kernal_n_jump + 0x38  ◄──────┘  (0x80700220)
   ... kernel jump code ...
   jr 0xA0000600 → eCos kernel entry point</code></pre>
 
-<p>The LZMA (Lempel-Ziv-Markov chain Algorithm) Decompressor decompresses the kernel code to KSEG1 (0xA0000000).</p>
+<p>LZMA (Lempel-Ziv-Markov chain Algorithm) Decompressor는 커널 코드를 KSEG1 (0xA0000000) 으로 압축 해제를 수행합니다.</p>
 <h2 id="Why-KSEG1-for-Kernel-Decompression-Output"><a href="#Why-KSEG1-for-Kernel-Decompression-Output" class="headerlink" title="Why KSEG1 for Kernel Decompression Output?"></a>Why KSEG1 for Kernel Decompression Output?</h2><hr>
-<p>The decompressed kernel is written to 0xA0000000 (KSEG1, uncached), not 0x80000000 (KSEG0, cached). Both map to the same physical DRAM address 0x00000000:</p>
+<p>압축 해제된 커널은 0xA0000000 (KSEG1, 캐시되지 않음) 에 기록되며, 0x80000000 (KSEG0, 캐시됨) 에는 기록되지 않습니다. 두 주소 모두 동일한 물리적 DRAM 주소인 0x00000000에 매핑됩니다:</p>
 <pre><code class="hljs plaintext">MIPS Virtual Address    Cache Mode    Physical Address
 ────────────────────    ──────────    ────────────────
 0xA0000000 (KSEG1)       Uncached     0x00000000 (DRAM)
-0x80000000 (KSEG0)        Cached      0x00000000 (DRAM)   &lt;- same physical memory</code></pre>
+0x80000000 (KSEG0)        Cached      0x00000000 (DRAM)   &lt;- 동일한 물리 주소</code></pre>
 
-<p>Writing to KSEG0 (0x80000000, cached) would place the decompressed data in D-cache, and eventually write it back to DRAM. However, since the MIPS architecture does not maintain coherency between D-cache and I-cache, the I-cache would still hold stale instructions — resulting in a crash.</p>
-<p>By writing to KSEG1 (0xA0000000, uncached) instead, the decompressed data bypasses the cache and goes directly to DRAM. When the CPU later jumps to 0x80000600 (KSEG0), it triggers an I-cache miss and correctly fetches the fresh instructions from DRAM.</p>
-<p>After decompression completes, the bootloader transfers control to the eCos kernel entry point, which initializes the HAL and starts the scheduler.</p>
+<p>KSEG0 (0x80000000, 캐시됨) 에 데이터를 쓰면, 압축 해제된 데이터가 D-Cache에 저장되고, 최종적으로 DRAM에 다시 기록됩니다. 하지만 MIPS 아키텍처는 D-Cache와 I-Cache 간의 일관성을 유지하지 않기 때문에, I-Cache에는 여전히 오래된 명령어가 남아 있어 시스템 충돌이 발생할 수 있습니다.</p>
+<p>KSEG1 (0xA0000000, 캐시되지 않음) 에 기록함으로써, 압축 해제된 데이터는 캐시를 거치지 않고 DRAM으로 직접 전송됩니다. 이후 CPU가 0x80000600 (KSEG0) 으로 점프하면 I-Cache miss가 발생하고 DRAM에서 최신 명령어를 올바르게 가져옵니다.</p>
+<p>압축 해제가 완료되면, 부트로더는 제어권을 eCos 커널 진입점으로 넘기고 해당 진입점은 HAL을 초기화하고 스케줄러를 시작합니다.</p>
 <h1 id="eCos-Firmware"><a href="#eCos-Firmware" class="headerlink" title="eCos Firmware"></a>eCos Firmware</h1><hr>
-<p>At this point, control has been transferred from the bootloader to the eCos kernel, marking the transition from firmware initialization to RTOS execution.</p>
+<p>이 시점에서 제어권이 부트로더에서 eCos 커널로 이전되며 이는 펌웨어 초기화에서 RTOS 실행으로의 전환을 의미합니다.</p>
 <pre><code class="hljs c">DRAM:<span class="hljs-number">80000600</span>    eCos_exception_entry:
 DRAM:<span class="hljs-number">80000600</span>                    mfc0    $k0, Cause       # General Exception Vector: dispatch via table at <span class="hljs-number">0x80000400.</span> NOT the startup entry.
 DRAM:<span class="hljs-number">80000604</span>                    nop
@@ -639,7 +628,7 @@ DRAM:<span class="hljs-number">8000061</span>C                    nop
 DRAM:<span class="hljs-number">80000620</span>                    jr      $k1              <span class="hljs-meta"># jump to 0x80000D00</span>
 DRAM:<span class="hljs-number">80000624</span>                    nop
 DRAM:<span class="hljs-number">80000624</span>     # End of function eCos_exception_entry</code></pre>
-<p>On the first entry during boot, control transfers to the reset handler at 0x80000D00. Although the exception vector mechanism uses the Cause register, the vector table is not yet initialized at this point, so execution proceeds directly to the reset entry point.</p>
+<p>첫 Entry에서 제어는 0x80000D00 주소의 리셋 핸들러로 전달됩니다. 이때 예외 벡터 메커니즘은 Cause 레지스터를 사용하지만, 이 시점에는 벡터 테이블이 아직 초기화되지 않았으므로 실행은 리셋 진입점으로 직접 진행됩니다. </p>
 <h2 id="C-Static-Constructors-Thread-Registration"><a href="#C-Static-Constructors-Thread-Registration" class="headerlink" title="C++ Static Constructors: Thread Registration"></a>C++ Static Constructors: Thread Registration</h2><pre><code class="hljs c"><span class="hljs-comment">// Analyzed by Claude Code Opus 4.6</span>
 
 hal_reset_entry @ <span class="hljs-number">0x80000D00</span>:
@@ -665,7 +654,8 @@ DRAM:<span class="hljs-number">80000</span>DB0  jal     hal_variant_init
 DRAM:<span class="hljs-number">80000</span>DB8  jal     cyg_hal_invoke_constructors
 ; Start <span class="hljs-title function_">scheduler</span><span class="hljs-params">(no <span class="hljs-keyword">return</span>)</span>
 DRAM:80000DC0  j       cyg_scheduler_start</code></pre>
-<p>The <code>hal_reset_entry</code> function (0x80000D00) initializes the exception vector table(0x80000400) and the SoC registers. It then calls <code>cyg_hal_invoke_constructors</code> to register application threads.<br><code>cyg_hal_invoke_constructors</code> iterates the <code>.ctors</code> section — a linker-generated array of function pointers. Each pointer is a C++ static constructor that runs before <code>main</code></p>
+<p><code>hal_reset_entry</code> 함수 (0x80000D00) 는 예외 벡터 테이블 (0x80000400) 과 SoC 레지스터를 초기화합니다. 그 후 <code>cyg_hal_invoke_constructors</code>를 호출하여 애플리케이션 스레드를 등록합니다.</p>
+<p><code>cyg_hal_invoke_constructors</code>는 링커가 생성한 함수 포인터 배열인 <code>.ctors</code> 섹션을 순회합니다. 각 포인터는 <code>main</code> 함수 이전에 실행되는 C++ 정적 생성자입니다. </p>
 <pre><code class="hljs c"><span class="hljs-keyword">typedef</span> <span class="hljs-title function_">void</span> <span class="hljs-params">(*ctor_func)</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span>;
 <span class="hljs-keyword">extern</span> ctor_func __CTOR_LIST__[];
 
@@ -673,8 +663,7 @@ DRAM:80000DC0  j       cyg_scheduler_start</code></pre>
     <span class="hljs-keyword">for</span> (ctor_func *p = &amp;__CTOR_LIST__[<span class="hljs-number">1</span>]; *p != <span class="hljs-literal">NULL</span>; p++)
         (*p)();   <span class="hljs-comment">// call each constructor</span>
 &#125;</code></pre>
-
-<p>In <a target="_blank" rel="noopener" href="https://ecos.sourceware.org/about.html">eCos</a>, thread creation can be performed either explicitly via <code>cyg_thread_create</code> or implicitly through static constructors, depending on how the application is structured. In many eCos applications, these constructors call <code>cyg_thread_create</code> to register threads with the scheduler like below:</p>
+<p><a target="_blank" rel="noopener" href="https://ecos.sourceware.org/about.html">eCos</a>에서 스레드 생성은 애플리케이션 구조에 따라 <code>cyg_thread_create</code>를 통해 명시적으로 수행하거나 정적 생성자를 통해 암시적으로 수행할 수 있습니다. 많은 eCos 애플리케이션에서 이러한 생성자는 아래와 같이 <code>cyg_thread_create</code>를 호출하여 스케줄러에 스레드를 등록합니다: </p>
 <pre><code class="hljs c"><span class="hljs-type">void</span> __static_init_xxx_main() &#123;
     cyg_thread_create(
         PRIORITY,               <span class="hljs-comment">// scheduling priority</span>
@@ -689,7 +678,7 @@ DRAM:80000DC0  j       cyg_scheduler_start</code></pre>
     cyg_thread_resume(thread_handle);
 &#125;</code></pre>
 
-<h2 id="Scheduler-Dispatch-Indirect-Call-to-Application-Thread"><a href="#Scheduler-Dispatch-Indirect-Call-to-Application-Thread" class="headerlink" title="Scheduler Dispatch: Indirect Call to Application Thread"></a>Scheduler Dispatch: Indirect Call to Application Thread</h2><p>After all constructors have run and threads are registered, <code>cyg_scheduler_start</code> enters the scheduling loop:</p>
+<h2 id="Scheduler-Dispatch-Indirect-Call-to-Application-Thread"><a href="#Scheduler-Dispatch-Indirect-Call-to-Application-Thread" class="headerlink" title="Scheduler Dispatch: Indirect Call to Application Thread"></a>Scheduler Dispatch: Indirect Call to Application Thread</h2><p>모든 생성자가 실행되고 스레드가 등록되면, <code>cyg_scheduler_start</code>는 스케줄링 루프에 진입합니다.</p>
 <pre><code class="hljs c"><span class="hljs-comment">// Analyzed by Claude Code Opus 4.6</span>
 cyg_scheduler_start @ <span class="hljs-number">0x8021DA5C</span>:
 
@@ -699,50 +688,38 @@ DRAM:<span class="hljs-number">8021</span>DA70  jal     sched_lock           ; l
 DRAM:<span class="hljs-number">8021</span>DA7C  lw      $t8, <span class="hljs-number">0x14</span>($s0)       ; $t8 = thread-&gt;entry (function pointer)
 DRAM:<span class="hljs-number">8021</span>DA80  j       context_switch       ; <span class="hljs-keyword">switch</span> to thread context
 DRAM:<span class="hljs-number">8021</span>DA84  lw      $a0, <span class="hljs-number">0x00</span>($s0)       ; $a0 = thread-&gt;arg (delay slot)</code></pre>
-
-<p>eCos uses a priority-based preemptive scheduler, where the highest-priority runnable thread is always selected for execution. The scheduler retrieves the thread structure from its run queue, extracts the entry function pointer (at offset 0x14), and performs a context switch to transfer control.</p>
+<p>eCos는 우선순위 기반 선점형 스케줄러를 사용하며 실행 가능한 스레드 중 가장 우선순위가 높은 스레드가 항상 선택되어 실행됩니다. 스케줄러는 실행 큐에서 스레드 구조체를 가져와 진입 함수 포인터 (오프셋 0x14) 를 추출한 후 컨텍스트 스위치를 수행하여 제어권을 넘깁니다.</p>
 <h1 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h1><hr>
-<p>This analysis walked through the complete boot chain of an eCos-based embedded system, starting from raw flash extraction to RTOS-level execution.</p>
-<p>We observed how the system transitions across multiple stages:</p>
+<p>본 분석에서는 eCos 기반 임베디드 시스템의 부팅 과정을 플래시 메모리 추출부터 RTOS 수준 실행까지 전체적으로 살펴보았습니다.</p>
+<p>시스템이 다음과 같이 여러 단계를 거쳐 부팅 및 초기화되는 과정을 분석하였습니다. </p>
 <ul>
-<li>Stage 1 Boot ROM code: XIP execution and minimal hardware setup</li>
-<li>Stage 1.5 Bootloader: Gzip decompression and cache synchronization</li>
-<li>Stage 2 Bootloader: Hardware initialization and firmware verification</li>
-<li>Kernel Decompressor: LZMA decompression into uncached memory (KSEG1)</li>
-<li>eCos Kernel: HAL initialization, constructor invocation, and scheduler start</li>
+<li>Stage 1 Boot ROM 코드: XIP 실행 및 최소 하드웨어 설정</li>
+<li>Stage 1.5 부트로더: Gzip 압축 해제 및 캐시 동기화</li>
+<li>Stage 2 부트로더: 하드웨어 초기화 및 펌웨어 검증</li>
+<li>Kernel Decompressor: LZMA 압축 해제 후 캐시되지 않은 메모리로 이동 (KSEG1)</li>
+<li>eCos 커널: HAL 초기화, 생성자 호출 및 스케줄러 시작</li>
 </ul>
-<p>Through this analysis, it can be observed that in embedded systems the bootloader and RTOS initialization processes are closely intertwined, and that a staged decompression-and-execution approach is employed to reduce flash memory usage.</p>
+<p>이러한 분석을 통해 임베디드 시스템에서는 부트로더와 RTOS 초기화 과정이 밀접하게 연관되어 있으며, 단계적으로 압축을 해제하여 실행하는 방식을 통해 플래시 메모리 사용량을 줄이는 기법이 적용되어 있음을 확인할 수 있었습니다. </p>
 
       </div>
       
         <div class="prev-or-next">
           <div class="post-foot-next">
             
+              <a href="/2026/03/30/Tearing-Down-eCos-RTOS-Embedded-System/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>Prev</span>
+              </a>
+            
           </div>
           <div class="post-attach">
             <span class="post-pubtime">
               <i class="iconfont icon-updatetime mr-10" title="Update time"></i>
-              2026-04-08 06:28:54
+              2026-04-08 06:29:04
             </span>
             
-                  <span class="post-tags">
-                    <i class="iconfont icon-tags mr-10" title="Tags"></i>
-                    
-                    <span class="span--tag mr-8">
-                      <a href="/tags/IoT/" title="IoT">
-                        #IoT
-                      </a>
-                    </span>
-                    
-                  </span>
-              
           </div>
           <div class="post-foot-prev">
-            
-              <a href="/2026/04/07/Tearing-Down-eCos-RTOS-Embedded-System-KR/" target="_self">
-                <span>Next</span>
-                <i class="iconfont icon-chevronright"></i>
-              </a>
             
           </div>
         </div>
@@ -1018,12 +995,12 @@ DRAM:<span class="hljs-number">8021</span>DA84  lw      $a0, <span class="hljs-n
       </a>
       <div class="share-content hidden">
         
-          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + Tearing%20Down%20eCos%20RTOS%20Embedded%20System + '&url=' + https%3A%2F%2Fjuhye0p.kr%2F2026%2F03%2F30%2FTearing-Down-eCos-RTOS-Embedded-System%2F + '" target="_blank" title="Twitter">
+          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + Tearing%20Down%20eCos%20RTOS%20Embedded%20System%20%5BKR%5D + '&url=' + https%3A%2F%2Fjuhye0p.kr%2F2026%2F04%2F07%2FTearing-Down-eCos-RTOS-Embedded-System-KR%2F + '" target="_blank" title="Twitter">
             <i class="iconfont icon-twitter"></i>
           </a>
         
         
-          <a class="share-item" href="https://www.facebook.com/sharer.php?u=https://juhye0p.kr/2026/03/30/Tearing-Down-eCos-RTOS-Embedded-System/" target="_blank" title="Facebook">
+          <a class="share-item" href="https://www.facebook.com/sharer.php?u=https://juhye0p.kr/2026/04/07/Tearing-Down-eCos-RTOS-Embedded-System-KR/" target="_blank" title="Facebook">
             <i class="iconfont icon-facebooksquare"></i>
           </a>
         
