@@ -1070,8 +1070,7 @@ figure .pin-copy {
 
 /* dark scheme */
 :root[color-mode="dark"] {
-  /*--bg-body: #2E3440; */
-  --bg-body: #14191e;
+  --bg-body: #171717;
   --color-text-base: #C1C2C5;
   --color-text-a: #C1C2C5;
   --color-text-a-hover: #FFFFFF;
