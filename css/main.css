@@ -7,7 +7,7 @@
 html, body {
   background: #0a0a0b;
   color: #e8e4de;
-  font-family: 'Geist', -apple-system, 'Segoe UI', system-ui, sans-serif;
+  font-family: 'Pretendard', -apple-system, 'Segoe UI', system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
   font-size: 17px;
   line-height: 1.65;
@@ -46,7 +46,7 @@ a { color: inherit; text-decoration: none; }
   display: flex;
   align-items: baseline;
   gap: 1px;
-  font-family: 'Geist Mono', ui-monospace, monospace;
+  font-family: 'Pretendard', -apple-system, 'Segoe UI', system-ui, sans-serif;
   font-size: 15px;
   font-weight: 500;
   letter-spacing: -0.01em;
@@ -76,7 +76,7 @@ a { color: inherit; text-decoration: none; }
   align-items: center;
   gap: 26px;
   font-size: 14px;
-  font-family: 'Geist Mono', ui-monospace, monospace;
+  font-family: 'Pretendard', -apple-system, 'Segoe UI', system-ui, sans-serif;
 }
 
 .nav-link {
@@ -116,7 +116,7 @@ a { color: inherit; text-decoration: none; }
 }
 
 .hero-label {
-  font-family: 'Geist Mono', ui-monospace, monospace;
+  font-family: 'Pretendard', -apple-system, 'Segoe UI', system-ui, sans-serif;
   font-size: 12.5px;
   letter-spacing: 0.04em;
   color: #ff2020;
@@ -161,7 +161,7 @@ a { color: inherit; text-decoration: none; }
 }
 
 .section-label {
-  font-family: 'Geist Mono', ui-monospace, monospace;
+  font-family: 'Pretendard', -apple-system, 'Segoe UI', system-ui, sans-serif;
   font-size: 12.5px;
   font-weight: 500;
   letter-spacing: 0.08em;
@@ -170,13 +170,13 @@ a { color: inherit; text-decoration: none; }
 }
 
 .post-count {
-  font-family: 'Geist Mono', ui-monospace, monospace;
+  font-family: 'Pretendard', -apple-system, 'Segoe UI', system-ui, sans-serif;
   font-size: 12.5px;
   color: #3e3c48;
 }
 
 .year-label {
-  font-family: 'Geist Mono', ui-monospace, monospace;
+  font-family: 'Pretendard', -apple-system, 'Segoe UI', system-ui, sans-serif;
   font-size: 12px;
   color: #3e3c48;
   letter-spacing: 0.05em;
@@ -203,7 +203,7 @@ a { color: inherit; text-decoration: none; }
 .post-date {
   flex: 0 0 auto;
   width: 62px;
-  font-family: 'Geist Mono', ui-monospace, monospace;
+  font-family: 'Pretendard', -apple-system, 'Segoe UI', system-ui, sans-serif;
   font-size: 12.5px;
   color: #3e3c48;
   letter-spacing: 0.01em;
@@ -220,7 +220,7 @@ a { color: inherit; text-decoration: none; }
 }
 
 .kr-badge {
-  font-family: 'Geist Mono', ui-monospace, monospace;
+  font-family: 'Pretendard', -apple-system, 'Segoe UI', system-ui, sans-serif;
   font-size: 10.5px;
   font-weight: 500;
   color: #ff2020;
@@ -238,7 +238,7 @@ a { color: inherit; text-decoration: none; }
 }
 
 .post-tag {
-  font-family: 'Geist Mono', ui-monospace, monospace;
+  font-family: 'Pretendard', -apple-system, 'Segoe UI', system-ui, sans-serif;
   font-size: 11.5px;
   color: #636069;
 }
@@ -266,7 +266,7 @@ a { color: inherit; text-decoration: none; }
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  font-family: 'Geist Mono', ui-monospace, monospace;
+  font-family: 'Pretendard', -apple-system, 'Segoe UI', system-ui, sans-serif;
   font-size: 12.5px;
   font-weight: 500;
   color: #a8a4a0;
@@ -334,7 +334,7 @@ a { color: inherit; text-decoration: none; }
 }
 
 .toc-label {
-  font-family: 'Geist Mono', ui-monospace, monospace;
+  font-family: 'Pretendard', -apple-system, 'Segoe UI', system-ui, sans-serif;
   font-size: 11px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -377,7 +377,7 @@ a { color: inherit; text-decoration: none; }
 
 .back-link {
   display: inline-block;
-  font-family: 'Geist Mono', ui-monospace, monospace;
+  font-family: 'Pretendard', -apple-system, 'Segoe UI', system-ui, sans-serif;
   font-size: 12.5px;
   color: #636069;
   text-decoration: none;
@@ -398,7 +398,7 @@ a { color: inherit; text-decoration: none; }
   display: inline-flex;
   align-items: center;
   gap: 1px;
-  font-family: 'Geist Mono', ui-monospace, monospace;
+  font-family: 'Pretendard', -apple-system, 'Segoe UI', system-ui, sans-serif;
   font-size: 12px;
   font-weight: 500;
   color: #a8a4a0;
@@ -430,7 +430,7 @@ a { color: inherit; text-decoration: none; }
 }
 
 .post-meta {
-  font-family: 'Geist Mono', ui-monospace, monospace;
+  font-family: 'Pretendard', -apple-system, 'Segoe UI', system-ui, sans-serif;
   font-size: 13px;
   color: #636069;
   padding-bottom: 26px;
@@ -475,7 +475,7 @@ a { color: inherit; text-decoration: none; }
 .post-content a:hover { text-decoration-color: #ff3535; }
 
 .post-content code {
-  font-family: 'JetBrains Mono', 'Geist Mono', ui-monospace, monospace;
+  font-family: 'Hack', 'Pretendard', ui-monospace, monospace;
   font-size: 0.88em;
   background: #17161c;
   color: #f07070;
@@ -550,7 +550,7 @@ a { color: inherit; text-decoration: none; }
 
 .post-content th {
   background: #111115;
-  font-family: 'Geist Mono', ui-monospace, monospace;
+  font-family: 'Pretendard', -apple-system, 'Segoe UI', system-ui, sans-serif;
   font-size: 13px;
   color: #636069;
   padding: 11px 16px;
@@ -586,7 +586,7 @@ a { color: inherit; text-decoration: none; }
 }
 
 .post-content .code-filename {
-  font-family: 'Geist Mono', ui-monospace, monospace;
+  font-family: 'Pretendard', -apple-system, 'Segoe UI', system-ui, sans-serif;
   font-size: 11.5px;
   color: #636069;
 }
@@ -596,7 +596,7 @@ a { color: inherit; text-decoration: none; }
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 6px;
   padding: 2px 9px;
-  font-family: 'Geist Mono', ui-monospace, monospace;
+  font-family: 'Pretendard', -apple-system, 'Segoe UI', system-ui, sans-serif;
   font-size: 11px;
   color: #636069;
   cursor: pointer;
@@ -613,7 +613,7 @@ a { color: inherit; text-decoration: none; }
   padding: 16px 18px;
   overflow-x: auto;
   background: #111113;
-  font-family: 'JetBrains Mono', 'Geist Mono', ui-monospace, monospace;
+  font-family: 'Hack', 'Pretendard', ui-monospace, monospace;
   font-size: 13px;
   line-height: 1.7;
   color: #c8c4bc;
@@ -705,7 +705,7 @@ a { color: inherit; text-decoration: none; }
 
 .post-content figcaption {
   margin-top: 10px;
-  font-family: 'Geist Mono', ui-monospace, monospace;
+  font-family: 'Pretendard', -apple-system, 'Segoe UI', system-ui, sans-serif;
   font-size: 12px;
   color: #636069;
   text-align: center;
@@ -768,7 +768,7 @@ a { color: inherit; text-decoration: none; }
 .post-nav-next { text-align: right; }
 
 .post-nav-dir {
-  font-family: 'Geist Mono', ui-monospace, monospace;
+  font-family: 'Pretendard', -apple-system, 'Segoe UI', system-ui, sans-serif;
   font-size: 11px;
   color: #3e3c48;
   margin-bottom: 5px;
@@ -810,7 +810,7 @@ a { color: inherit; text-decoration: none; }
   display: flex;
   align-items: center;
   justify-content: space-between;
-  font-family: 'Geist Mono', ui-monospace, monospace;
+  font-family: 'Pretendard', -apple-system, 'Segoe UI', system-ui, sans-serif;
   font-size: 12px;
   color: #3e3c48;
 }
@@ -829,7 +829,7 @@ a { color: inherit; text-decoration: none; }
 }
 
 .not-found-code {
-  font-family: 'Geist Mono', ui-monospace, monospace;
+  font-family: 'Pretendard', -apple-system, 'Segoe UI', system-ui, sans-serif;
   font-size: 120px;
   font-weight: 500;
   line-height: 1;
