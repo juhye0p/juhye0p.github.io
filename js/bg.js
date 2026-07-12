@@ -32,6 +32,7 @@
 
   var ctx = canvas.getContext('2d');
   var w = 0, h = 0, dpr = 1, pts = [];
+  var lastW = -1;
   var mouse = { x: -9999, y: -9999 };
 
   function build() {
@@ -54,6 +55,20 @@
       if (pts[i].x > w) pts[i].x = Math.random() * w;
       if (pts[i].y > h) pts[i].y = Math.random() * h;
     }
+    lastW = w;
+  }
+
+  // On mobile the URL bar shows/hides, firing resize with a height-only
+  // change. Rebuilding then repositions points and looks jumpy — so when
+  // the width is unchanged, just resize the canvas and keep the points.
+  function onResize() {
+    if (window.innerWidth === lastW) {
+      h = window.innerHeight;
+      canvas.height = h * dpr;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      return;
+    }
+    build();
   }
 
   function frame() {
@@ -115,11 +130,24 @@
     requestAnimationFrame(frame);
   }
 
-  window.addEventListener('resize', build, { passive: true });
+  window.addEventListener('resize', onResize, { passive: true });
   window.addEventListener('mousemove', function (e) {
     mouse.x = e.clientX; mouse.y = e.clientY;
   }, { passive: true });
   window.addEventListener('mouseout', function () {
+    mouse.x = -9999; mouse.y = -9999;
+  }, { passive: true });
+
+  // touch: weave the mesh under the finger (tap / drag) on mobile
+  function fromTouch(e) {
+    if (e.touches && e.touches.length) {
+      mouse.x = e.touches[0].clientX;
+      mouse.y = e.touches[0].clientY;
+    }
+  }
+  window.addEventListener('touchstart', fromTouch, { passive: true });
+  window.addEventListener('touchmove', fromTouch, { passive: true });
+  window.addEventListener('touchend', function () {
     mouse.x = -9999; mouse.y = -9999;
   }, { passive: true });
 

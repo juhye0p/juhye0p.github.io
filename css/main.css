@@ -442,6 +442,8 @@ a { color: inherit; text-decoration: none; }
 .post-content {
   color: #f0eeea;
   line-height: 1.8;
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 
 .post-content h1,
