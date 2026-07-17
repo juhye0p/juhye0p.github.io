@@ -8,9 +8,10 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 /* ---- Logo matrix/decode effect on hover ----
-   Each character steps forward through the printable ASCII range and locks
-   onto its correct letter/number. Slots resolve left→right (staggered spin
-   length), so "s14ke" decodes one glyph at a time. Runs once per hover. */
+   Each character cycles through letters+digits in place and locks onto its
+   correct glyph. The charset excludes symbols and descenders (g j p q y) so
+   every glyph shares a baseline/height and the text never jumps vertically.
+   Slots resolve left→right (staggered spin length); runs once per hover. */
 function initLogoScramble() {
   var logo = document.querySelector('.logo');
   var el = logo && logo.querySelector('.logo-name');
@@ -19,12 +20,14 @@ function initLogoScramble() {
   // Respect users who prefer reduced motion.
   if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
-  var LO = 33, HI = 126, RANGE = HI - LO + 1;   // printable ASCII (! .. ~)
+  var CHARS = 'abcdefhiklmnorstuvwxz0123456789'.split('');  // no descenders, no symbols
   var finalText = el.textContent;
   var running = false;
 
-  function wrap(code) {
-    return LO + (((code - LO) % RANGE) + RANGE) % RANGE;
+  function idxOf(c) {
+    var i = CHARS.indexOf(c);
+    if (i < 0) { CHARS.push(c); i = CHARS.length - 1; }   // ensure every target is reachable
+    return i;
   }
 
   logo.addEventListener('mouseenter', function () {
@@ -37,20 +40,21 @@ function initLogoScramble() {
     el.style.width = w + 'px';
     el.style.textAlign = 'left';
 
-    var targets = finalText.split('').map(function (c) { return c.charCodeAt(0); });
-    // Steps each slot spins before locking; later slots spin longer -> left-to-right reveal.
-    var steps = targets.map(function (_, i) { return 22 + i * 6; });
-    // Start each slot `steps` chars behind its target so +1 stepping lands exactly on it.
-    var code = targets.map(function (t, i) { return wrap(t - steps[i]); });
+    var target = finalText.split('').map(idxOf);
+    // Steps each slot cycles before locking; later slots spin longer -> left-to-right reveal.
+    var steps = target.map(function (_, i) { return 22 + i * 6; });
+    // Start each slot `steps` positions behind its target so +1 stepping lands exactly on it.
+    var n = CHARS.length;
+    var idx = target.map(function (t, i) { return ((t - steps[i]) % n + n) % n; });
 
     var timer = setInterval(function () {
       var out = '', done = true;
-      for (var i = 0; i < targets.length; i++) {
-        if (steps[i] <= 0) { out += String.fromCharCode(targets[i]); continue; }
+      for (var i = 0; i < target.length; i++) {
+        if (steps[i] <= 0) { out += finalText[i]; continue; }
         done = false;
-        code[i] = wrap(code[i] + 1);
+        idx[i] = (idx[i] + 1) % n;
         steps[i]--;
-        out += String.fromCharCode(code[i]);
+        out += CHARS[idx[i]];
       }
       el.textContent = out;
       if (done) {
