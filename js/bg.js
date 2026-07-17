@@ -1,7 +1,7 @@
 /* ============================================================
-   juhye0p theme — animated node-mesh background (option 1c)
+   s14ke theme — animated node-mesh background (option 1c)
    Self-injecting: creates its own fixed <canvas> behind content.
-   Drop this file at themes/juhye0p/source/js/bg.js and load it
+   Drop this file at themes/s14ke/source/js/bg.js and load it
    in layout.ejs BEFORE main.js:
      <script src="<%- url_for('/js/bg.js') %>"></script>
    No other markup needed. Respects prefers-reduced-motion.
