@@ -1,10 +1,69 @@
 document.addEventListener('DOMContentLoaded', function () {
   initNavActive();
+  initLogoScramble();
   initCodeBlocks();
   initTables();
   initLightbox();
   initTOC();
 });
+
+/* ---- Logo matrix/decode effect on hover ----
+   Each character steps forward through the printable ASCII range and locks
+   onto its correct letter/number. Slots resolve left→right (staggered spin
+   length), so "s14ke" decodes one glyph at a time. Runs once per hover. */
+function initLogoScramble() {
+  var logo = document.querySelector('.logo');
+  var el = logo && logo.querySelector('.logo-name');
+  if (!el) return;
+
+  // Respect users who prefer reduced motion.
+  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  var LO = 33, HI = 126, RANGE = HI - LO + 1;   // printable ASCII (! .. ~)
+  var finalText = el.textContent;
+  var running = false;
+
+  function wrap(code) {
+    return LO + (((code - LO) % RANGE) + RANGE) % RANGE;
+  }
+
+  logo.addEventListener('mouseenter', function () {
+    if (running || !finalText) return;
+    running = true;
+
+    // Lock the box width so the blinking cursor beside it never shifts.
+    var w = el.getBoundingClientRect().width;
+    el.style.display = 'inline-block';
+    el.style.width = w + 'px';
+    el.style.textAlign = 'left';
+
+    var targets = finalText.split('').map(function (c) { return c.charCodeAt(0); });
+    // Steps each slot spins before locking; later slots spin longer -> left-to-right reveal.
+    var steps = targets.map(function (_, i) { return 22 + i * 6; });
+    // Start each slot `steps` chars behind its target so +1 stepping lands exactly on it.
+    var code = targets.map(function (t, i) { return wrap(t - steps[i]); });
+
+    var timer = setInterval(function () {
+      var out = '', done = true;
+      for (var i = 0; i < targets.length; i++) {
+        if (steps[i] <= 0) { out += String.fromCharCode(targets[i]); continue; }
+        done = false;
+        code[i] = wrap(code[i] + 1);
+        steps[i]--;
+        out += String.fromCharCode(code[i]);
+      }
+      el.textContent = out;
+      if (done) {
+        clearInterval(timer);
+        el.textContent = finalText;
+        el.style.display = '';
+        el.style.width = '';
+        el.style.textAlign = '';
+        running = false;
+      }
+    }, 28);
+  });
+}
 
 /* ---- Active nav link ---- */
 function initNavActive() {
