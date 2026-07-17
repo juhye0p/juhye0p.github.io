@@ -8,12 +8,12 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 /* ---- Logo matrix decode on hover ----
-   Hovering the logo scrambles the nickname through letters, digits and symbols,
-   then decodes it left→right and settles on "s14ke" if the pointer stays. Each
-   slot churns at its own pace and eases out as it approaches its lock frame, so
-   the reveal reads smoothly rather than as a hard flip. Leaving resets the text
-   so a fresh hover replays the decode. The logo is monospaced (see CSS), so the
-   grid never shifts and the blinking cursor stays put — no width hack needed. */
+   Hovering the logo churns the nickname at a steady pace, then locks it
+   left→right and settles on "s14ke" if the pointer stays. The charset is
+   letters+digits only, all resting on the baseline with no descenders, so the
+   glyphs never jump vertically. Leaving resets the text so a fresh hover
+   replays the decode. The logo is monospaced (see CSS) so the grid never
+   shifts horizontally either — the blinking cursor stays put. */
 function initLogoScramble() {
   var logo = document.querySelector('.logo');
   var el = logo && logo.querySelector('.logo-name');
@@ -22,7 +22,7 @@ function initLogoScramble() {
   // Respect users who prefer reduced motion.
   if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
-  var CHARS = 'abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()-_=+[]{}<>/?~;:.,'.split('');
+  var CHARS = 'abcdefhiklmnorstuvwxz0123456789'.split('');  // baseline-safe: no descenders, no symbols
   var finalText = el.textContent;
   var timer = null;
 
@@ -37,26 +37,15 @@ function initLogoScramble() {
     // Each slot locks at a staggered frame -> left-to-right decode.
     var lockAt = [];
     for (var i = 0; i < n; i++) lockAt.push(10 + i * 6);
-    var lastFrame = lockAt[n - 1] + 2;
-    // Cached glyphs so unlocked slots only reroll every other frame near the
-    // start and slow down as they near their lock frame -> smoother, less noisy.
-    var glyph = finalText.split('').map(rand);
+    var lastFrame = lockAt[n - 1] + 1;
     var frame = 0;
 
     timer = setInterval(function () {
       var out = '';
-      for (var i = 0; i < n; i++) {
-        if (frame >= lockAt[i]) { glyph[i] = finalText[i]; }
-        else {
-          var left = lockAt[i] - frame;           // frames until this slot locks
-          var reroll = left > 6 ? (frame % 2 === 0) : (frame % 3 === 0);
-          if (reroll) glyph[i] = rand();
-        }
-        out += glyph[i];
-      }
+      for (var i = 0; i < n; i++) out += frame >= lockAt[i] ? finalText[i] : rand();
       el.textContent = out;
       if (++frame > lastFrame) { stop(); el.textContent = finalText; }
-    }, 50);
+    }, 45);
   });
 
   // Reset so the next hover starts a fresh decode from scramble.
