@@ -7,11 +7,11 @@ document.addEventListener('DOMContentLoaded', function () {
   initTOC();
 });
 
-/* ---- Logo matrix/decode effect on hover ----
-   Each character cycles through letters+digits in place and locks onto its
-   correct glyph. The charset excludes symbols and descenders (g j p q y) so
-   every glyph shares a baseline/height and the text never jumps vertically.
-   Slots resolve left→right (staggered spin length); runs once per hover. */
+/* ---- Logo matrix effect on hover ----
+   While the pointer is over the logo, every character churns continuously
+   through letters, digits and symbols (the matrix). On mouse-leave it decodes
+   left→right back to the real nickname. The box width is locked during the
+   effect so the blinking cursor beside it never shifts horizontally. */
 function initLogoScramble() {
   var logo = document.querySelector('.logo');
   var el = logo && logo.querySelector('.logo-name');
@@ -20,52 +20,56 @@ function initLogoScramble() {
   // Respect users who prefer reduced motion.
   if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
-  var CHARS = 'abcdefhiklmnorstuvwxz0123456789'.split('');  // no descenders, no symbols
+  var CHARS = 'abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()-_=+[]{}<>/?~;:.,'.split('');
   var finalText = el.textContent;
-  var running = false;
+  var churn = null, settle = null, locked = false;
 
-  function idxOf(c) {
-    var i = CHARS.indexOf(c);
-    if (i < 0) { CHARS.push(c); i = CHARS.length - 1; }   // ensure every target is reachable
-    return i;
+  function rand() { return CHARS[Math.floor(Math.random() * CHARS.length)]; }
+
+  function lockWidth() {
+    if (locked) return;
+    el.style.display = 'inline-block';
+    el.style.width = el.getBoundingClientRect().width + 'px';
+    el.style.textAlign = 'left';
+    locked = true;
+  }
+  function unlockWidth() {
+    el.style.display = ''; el.style.width = ''; el.style.textAlign = '';
+    locked = false;
+  }
+  function clearTimers() {
+    if (churn) { clearInterval(churn); churn = null; }
+    if (settle) { clearInterval(settle); settle = null; }
   }
 
+  // Keep churning every glyph for as long as the pointer stays on the logo.
   logo.addEventListener('mouseenter', function () {
-    if (running || !finalText) return;
-    running = true;
-
-    // Lock the box width so the blinking cursor beside it never shifts.
-    var w = el.getBoundingClientRect().width;
-    el.style.display = 'inline-block';
-    el.style.width = w + 'px';
-    el.style.textAlign = 'left';
-
-    var target = finalText.split('').map(idxOf);
-    // Steps each slot cycles before locking; later slots spin longer -> left-to-right reveal.
-    var steps = target.map(function (_, i) { return 22 + i * 6; });
-    // Start each slot `steps` positions behind its target so +1 stepping lands exactly on it.
-    var n = CHARS.length;
-    var idx = target.map(function (t, i) { return ((t - steps[i]) % n + n) % n; });
-
-    var timer = setInterval(function () {
-      var out = '', done = true;
-      for (var i = 0; i < target.length; i++) {
-        if (steps[i] <= 0) { out += finalText[i]; continue; }
-        done = false;
-        idx[i] = (idx[i] + 1) % n;
-        steps[i]--;
-        out += CHARS[idx[i]];
-      }
+    if (!finalText) return;
+    clearTimers();
+    lockWidth();
+    churn = setInterval(function () {
+      var out = '';
+      for (var i = 0; i < finalText.length; i++) out += rand();
       el.textContent = out;
-      if (done) {
-        clearInterval(timer);
+    }, 55);
+  });
+
+  // Decode back to the real nickname, one glyph at a time, left→right.
+  logo.addEventListener('mouseleave', function () {
+    if (!finalText) return;
+    clearTimers();
+    var reveal = 0, frame = 0;
+    settle = setInterval(function () {
+      var out = '';
+      for (var i = 0; i < finalText.length; i++) out += i < reveal ? finalText[i] : rand();
+      el.textContent = out;
+      if (++frame % 3 === 0) reveal++;
+      if (reveal > finalText.length) {
+        clearTimers();
         el.textContent = finalText;
-        el.style.display = '';
-        el.style.width = '';
-        el.style.textAlign = '';
-        running = false;
+        unlockWidth();
       }
-    }, 28);
+    }, 45);
   });
 }
 
