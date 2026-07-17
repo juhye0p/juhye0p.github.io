@@ -7,11 +7,13 @@ document.addEventListener('DOMContentLoaded', function () {
   initTOC();
 });
 
-/* ---- Logo matrix effect on hover ----
-   While the pointer is over the logo, every character churns continuously
-   through letters, digits and symbols (the matrix). On mouse-leave it decodes
-   left→right back to the real nickname. The box width is locked during the
-   effect so the blinking cursor beside it never shifts horizontally. */
+/* ---- Logo matrix decode on hover ----
+   Hovering the logo scrambles the nickname through letters, digits and symbols,
+   then decodes it left→right and settles on "s14ke" if the pointer stays. Each
+   slot churns at its own pace and eases out as it approaches its lock frame, so
+   the reveal reads smoothly rather than as a hard flip. Leaving resets the text
+   so a fresh hover replays the decode. The logo is monospaced (see CSS), so the
+   grid never shifts and the blinking cursor stays put — no width hack needed. */
 function initLogoScramble() {
   var logo = document.querySelector('.logo');
   var el = logo && logo.querySelector('.logo-name');
@@ -22,54 +24,45 @@ function initLogoScramble() {
 
   var CHARS = 'abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()-_=+[]{}<>/?~;:.,'.split('');
   var finalText = el.textContent;
-  var churn = null, settle = null, locked = false;
+  var timer = null;
 
   function rand() { return CHARS[Math.floor(Math.random() * CHARS.length)]; }
+  function stop() { if (timer) { clearInterval(timer); timer = null; } }
 
-  function lockWidth() {
-    if (locked) return;
-    el.style.display = 'inline-block';
-    el.style.width = el.getBoundingClientRect().width + 'px';
-    el.style.textAlign = 'left';
-    locked = true;
-  }
-  function unlockWidth() {
-    el.style.display = ''; el.style.width = ''; el.style.textAlign = '';
-    locked = false;
-  }
-  function clearTimers() {
-    if (churn) { clearInterval(churn); churn = null; }
-    if (settle) { clearInterval(settle); settle = null; }
-  }
-
-  // Keep churning every glyph for as long as the pointer stays on the logo.
   logo.addEventListener('mouseenter', function () {
     if (!finalText) return;
-    clearTimers();
-    lockWidth();
-    churn = setInterval(function () {
+    stop();
+
+    var n = finalText.length;
+    // Each slot locks at a staggered frame -> left-to-right decode.
+    var lockAt = [];
+    for (var i = 0; i < n; i++) lockAt.push(10 + i * 6);
+    var lastFrame = lockAt[n - 1] + 2;
+    // Cached glyphs so unlocked slots only reroll every other frame near the
+    // start and slow down as they near their lock frame -> smoother, less noisy.
+    var glyph = finalText.split('').map(rand);
+    var frame = 0;
+
+    timer = setInterval(function () {
       var out = '';
-      for (var i = 0; i < finalText.length; i++) out += rand();
+      for (var i = 0; i < n; i++) {
+        if (frame >= lockAt[i]) { glyph[i] = finalText[i]; }
+        else {
+          var left = lockAt[i] - frame;           // frames until this slot locks
+          var reroll = left > 6 ? (frame % 2 === 0) : (frame % 3 === 0);
+          if (reroll) glyph[i] = rand();
+        }
+        out += glyph[i];
+      }
       el.textContent = out;
-    }, 55);
+      if (++frame > lastFrame) { stop(); el.textContent = finalText; }
+    }, 50);
   });
 
-  // Decode back to the real nickname, one glyph at a time, left→right.
+  // Reset so the next hover starts a fresh decode from scramble.
   logo.addEventListener('mouseleave', function () {
-    if (!finalText) return;
-    clearTimers();
-    var reveal = 0, frame = 0;
-    settle = setInterval(function () {
-      var out = '';
-      for (var i = 0; i < finalText.length; i++) out += i < reveal ? finalText[i] : rand();
-      el.textContent = out;
-      if (++frame % 3 === 0) reveal++;
-      if (reveal > finalText.length) {
-        clearTimers();
-        el.textContent = finalText;
-        unlockWidth();
-      }
-    }, 45);
+    stop();
+    el.textContent = finalText;
   });
 }
 
