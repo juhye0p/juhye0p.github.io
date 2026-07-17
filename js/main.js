@@ -9,11 +9,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
 /* ---- Logo matrix decode on hover ----
    Hovering the logo churns the nickname at a steady pace, then locks it
-   left→right and settles on "s14ke" if the pointer stays. The charset is
-   letters+digits only, all resting on the baseline with no descenders, so the
-   glyphs never jump vertically. Leaving resets the text so a fresh hover
-   replays the decode. The logo is monospaced (see CSS) so the grid never
-   shifts horizontally either — the blinking cursor stays put. */
+   left→right and settles on "s14ke". Once started the decode always runs to
+   completion — leaving mid-cycle does NOT snap back; the matrix keeps churning
+   until the decode finishes. Re-hovering restarts it from scramble. The charset
+   is letters+digits only, all resting on the baseline with no descenders, so
+   glyphs never jump vertically; the logo is monospaced (see CSS) so the grid
+   never shifts horizontally either — the blinking cursor stays put. */
 function initLogoScramble() {
   var logo = document.querySelector('.logo');
   var el = logo && logo.querySelector('.logo-name');
@@ -47,12 +48,7 @@ function initLogoScramble() {
       if (++frame > lastFrame) { stop(); el.textContent = finalText; }
     }, 45);
   });
-
-  // Reset so the next hover starts a fresh decode from scramble.
-  logo.addEventListener('mouseleave', function () {
-    stop();
-    el.textContent = finalText;
-  });
+  // No mouseleave reset: a decode in progress runs to completion on its own.
 }
 
 /* ---- Active nav link ---- */
